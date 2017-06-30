@@ -412,7 +412,7 @@ Shot.getRawValue = function(id, deviceId) {
   if (!id) {
     throw new Error("Empty id: " + id);
   }
-  let query = `SELECT value, deviceid, url, title, expire_time, deleted, block_type FROM data WHERE id = $1`;
+  let query = `SELECT value, deviceid, url, title, expire_time, deleted, block_type, device.accountid FROM data, devices WHERE data.deviceid = device.id AND id = $1`;
   let params = [id];
   if (deviceId) {
     query += ` AND deviceid = $2`;

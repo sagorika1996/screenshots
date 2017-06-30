@@ -222,6 +222,7 @@ app.use(function(req, res, next) {
     }
   }
   if (authInfo.deviceId) {
+    // FIXME: get accountId from cookie/authInfo here (and above)
     req.deviceId = authInfo.deviceId;
     req.userAnalytics = ua(config.gaId, req.deviceId, {strictCidFormat: false});
     if (config.debugGoogleAnalytics) {
@@ -528,7 +529,7 @@ app.post("/api/register", function(req, res) {
 });
 
 function sendAuthInfo(req, res, params) {
-  let { deviceId, userAbTests } = params;
+  let { deviceId, accountId, userAbTests } = params;
   if (deviceId.search(/^[a-zA-Z0-9_-]{1,255}$/) == -1) {
     // FIXME: add logging message with deviceId
     throw new Error("Bad deviceId");
@@ -537,7 +538,11 @@ function sendAuthInfo(req, res, params) {
   let keygrip = dbschema.getKeygrip();
   let cookies = new Cookies(req, res, {keys: keygrip});
   cookies.set("user", deviceId, {signed: true, sameSite: 'lax'});
+  if (accountId) {
+    cookies.set("accountid", accountId, {signed: true, sameSite: 'lax'});
+  }
   cookies.set("abtests", encodedAbTests, {signed: true, sameSite: 'lax'});
+  // FIXME: update this with accountid:
   let authHeader = `${deviceId}:${keygrip.sign(deviceId)};abTests=${encodedAbTests}:${keygrip.sign(encodedAbTests)}`;
   let responseJson = {
     ok: "User created",
@@ -670,6 +675,7 @@ app.post("/api/delete-shot", csrfProtection, function(req, res) {
     simpleResponse(res, "Not logged in", 401);
     return;
   }
+  // FIXME: check here or in deleteShot, if accountId gives the user permission to do this
   Shot.deleteShot(req.backend, req.body.id, req.deviceId).then((result) => {
     if (result) {
       simpleResponse(res, "ok", 200);
@@ -683,6 +689,7 @@ app.post("/api/delete-shot", csrfProtection, function(req, res) {
 });
 
 app.post("/api/set-title/:id/:domain", csrfProtection, function(req, res) {
+  // FIXME: check accountId in addition to deviceId
   let shotId = `${req.params.id}/${req.params.domain}`;
   let userTitle = req.body.title;
   if (userTitle === undefined) {
@@ -709,6 +716,7 @@ app.post("/api/set-title/:id/:domain", csrfProtection, function(req, res) {
 });
 
 app.post("/api/set-expiration", csrfProtection, function(req, res) {
+  // FIXME: check accountId in addition to deviceId
   if (!req.deviceId) {
     sendRavenMessage(req, "Attempt to set expiration without login");
     simpleResponse(res, "Not logged in", 401);
