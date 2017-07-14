@@ -60,3 +60,4 @@ Planning and ideation is happening in the [issue tracker](https://github.com/moz
 * Look for "Sprint 54.x" to see planned work for a sprint (2-week phase)
 
 Issue tags otherwise aren't very structured. [Research](https://github.com/mozilla-services/screenshots/issues?q=is%3Aopen+is%3Aissue+label%3Aresearch) is primarily analysis of other products that do something interesting, or some source material that could provide insight.  Input on these (things like "I like this product because...") is very helpful!
+
