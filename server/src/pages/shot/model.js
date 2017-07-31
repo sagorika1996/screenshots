@@ -13,6 +13,7 @@ exports.createModel = function(req) {
   if (req.shot.favicon) {
     req.shot.favicon = createProxyUrl(req, req.shot.favicon);
   }
+  let enableAnnotations = req.config.enableAnnotations;
   let serverPayload = {
     title: req.shot.title,
     staticLink: req.staticLink,
@@ -39,7 +40,8 @@ exports.createModel = function(req) {
     userAgent: req.headers['user-agent'],
     blockType: req.shot.blockType,
     downloadUrl,
-    isMobile
+    isMobile,
+    enableAnnotations
   };
   let clientPayload = {
     title: req.shot.title,
@@ -67,7 +69,8 @@ exports.createModel = function(req) {
     userAgent: req.headers['user-agent'],
     blockType: req.shot.blockType,
     downloadUrl,
-    isMobile
+    isMobile,
+    enableAnnotations
   };
   if (serverPayload.expireTime !== null && Date.now() > serverPayload.expireTime) {
     clientPayload.shot = {
