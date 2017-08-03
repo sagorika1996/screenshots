@@ -41,6 +41,7 @@ exports.HeadTemplate = class HeadTemplate extends React.Component {
         <link rel="icon" type="image/png" href={this.props.staticLink("/static/img/favicon-16.png")} sizes="16x16"/>
         <link rel="icon" type="image/png" href={this.props.staticLink("/static/img/favicon-32.png")} sizes="32x32"/>
         <link rel="icon" type="image/png" href={this.props.staticLink("/static/img/favicon-96.png")} sizes="96x96"/>
+        <link rel="stylesheet" type="text/css" href="https://code.cdn.mozilla.net/fonts/fira.css" />
         { analyticsScript }
         { activationScript }
         { this.props.sentryPublicDSN ? <script src={this.props.staticLink("/install-raven.js")} async /> : null }
